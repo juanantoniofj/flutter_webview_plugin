@@ -78,8 +78,27 @@ static NSString *const CHANNEL_NAME = @"flutter_webview_plugin";
     }
     
     if (clearCookies != (id)[NSNull null] && [clearCookies boolValue]) {
+        NSSet *websiteDataTypes
+            = [NSSet setWithArray:@[
+                WKWebsiteDataTypeDiskCache,
+                WKWebsiteDataTypeOfflineWebApplicationCache,
+                WKWebsiteDataTypeMemoryCache,
+                WKWebsiteDataTypeLocalStorage,
+                WKWebsiteDataTypeCookies,
+                WKWebsiteDataTypeSessionStorage,
+                WKWebsiteDataTypeIndexedDBDatabases,
+                WKWebsiteDataTypeWebSQLDatabases
+                ]];
+//// All kinds of data
+//NSSet *websiteDataTypes = [WKWebsiteDataStore allWebsiteDataTypes];
+//// Date from
+        NSDate *dateFrom = [NSDate dateWithTimeIntervalSince1970:0];
+//// Execute
+        [[WKWebsiteDataStore defaultDataStore] removeDataOfTypes:websiteDataTypes modifiedSince:dateFrom completionHandler:^{
+                // Done
+            }];
         [[NSURLSession sharedSession] resetWithCompletionHandler:^{
-        }];
+            }];
     }
     
     if (userAgent != (id)[NSNull null]) {
